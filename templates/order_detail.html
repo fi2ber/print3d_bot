@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Заказ #{{ order.id }}</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('admin') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Назад
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Информация о заказе</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('update_order', order_id=order.id) }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">ID заказа</label>
+                                <input type="text" class="form-control" value="{{ order.id }}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Статус</label>
+                                <select name="status" class="form-select">
+                                    {% for status_key, status_name in statuses.items() %}
+                                        <option value="{{ status_key }}" {% if order.status == status_key %}selected{% endif %}>
+                                            {{ status_name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Имя клиента</label>
+                                <input type="text" class="form-control" value="{{ order.name }}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Телефон</label>
+                                <input type="text" class="form-control" value="{{ order.phone }}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Telegram Username</label>
+                                <input type="text" class="form-control" value="{{ order.username or 'Не указан' }}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Язык</label>
+                                <input type="text" class="form-control" value="{{ 'Русский' if order.language == 'ru' else 'Узбекский' }}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Тип услуги</label>
+                        <input type="text" class="form-control" value="{{ order.service_type }}" readonly>
+                    </div>
+                    
+                    {% if order.material %}
+                    <div class="mb-3">
+                        <label class="form-label">Материал</label>
+                        <input type="text" class="form-control" value="{{ order.material }}" readonly>
+                    </div>
+                    {% endif %}
+                    
+                    {% if order.color %}
+                    <div class="mb-3">
+                        <label class="form-label">Цвет</label>
+                        <input type="text" class="form-control" value="{{ order.color }}" readonly>
+                    </div>
+                    {% endif %}
+                    
+                    {% if order.strength_accuracy %}
+                    <div class="mb-3">
+                        <label class="form-label">Назначение</label>
+                        <input type="text" class="form-control" value="{{ order.strength_accuracy }}" readonly>
+                    </div>
+                    {% endif %}
+                    
+                    {% if order.usage_temp %}
+                    <div class="mb-3">
+                        <label class="form-label">Температура эксплуатации</label>
+                        <input type="text" class="form-control" value="{{ order.usage_temp }}" readonly>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Количество</label>
+                        <input type="text" class="form-control" value="{{ order.quantity }}" readonly>
+                    </div>
+                    
+                    {% if order.deadline %}
+                    <div class="mb-3">
+                        <label class="form-label">Сроки</label>
+                        <input type="text" class="form-control" value="{{ order.deadline }}" readonly>
+                    </div>
+                    {% endif %}
+                    
+                    {% if order.location %}
+                    <div class="mb-3">
+                        <label class="form-label">Локация</label>
+                        <input type="text" class="form-control" value="{{ order.location }}" readonly>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Менеджер</label>
+                        <input type="text" name="manager_contact" class="form-control" value="{{ order.manager_contact or '' }}" placeholder="Контакт менеджера">
+                    </div>
+                    
+                    {% if order.description %}
+                    <div class="mb-3">
+                        <label class="form-label">Описание</label>
+                        <textarea class="form-control" rows="3" readonly>{{ order.description }}</textarea>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Дата создания</label>
+                        <input type="text" class="form-control" value="{{ order.created_at }}" readonly>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Дата обновления</label>
+                        <input type="text" class="form-control" value="{{ order.updated_at }}" readonly>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Сохранить изменения
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>Дополнительно</h4>
+            </div>
+            <div class="card-body">
+                {% if order.file_path %}
+                <div class="mb-3">
+                    <label class="form-label">Файл</label>
+                    <div>
+                        {% if '.stl' in order.file_path.lower() %}
+                            <i class="fas fa-cube text-primary"></i>
+                        {% else %}
+                            <i class="fas fa-image text-success"></i>
+                        {% endif %}
+                        <a href="/{{ order.file_path }}" target="_blank" class="ms-2">
+                            {{ order.file_path.split('/')[-1] }}
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="mb-3">
+                    <label class="form-label">Действия</label>
+                    <div class="d-grid gap-2">
+                        <a href="tel:{{ order.phone }}" class="btn btn-success">
+                            <i class="fas fa-phone"></i> Позвонить
+                        </a>
+                        {% if order.username %}
+                            <a href="https://t.me/{{ order.username }}" target="_blank" class="btn btn-info">
+                                <i class="fab fa-telegram"></i> Написать в Telegram
+                            </a>
+                        {% endif %}
+                        <a href="{{ url_for('export_orders') }}" class="btn btn-secondary">
+                            <i class="fas fa-file-excel"></i> Экспорт в Excel
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Быстрая смена статуса</label>
+                    <div class="d-grid gap-2">
+                        {% for status_key, status_name in statuses.items() %}
+                            {% if status_key != order.status %}
+                                <button class="btn btn-outline-primary btn-sm" onclick="quickStatusChange('{{ status_key }}')">
+                                    {{ status_name }}
+                                </button>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function quickStatusChange(newStatus) {
+    if (confirm('Изменить статус заказа на "' + newStatus + '"?')) {
+        const form = document.querySelector('form');
+        const statusSelect = form.querySelector('select[name="status"]');
+        statusSelect.value = newStatus;
+        form.submit();
+    }
+}
+</script>
+{% endblock %}
